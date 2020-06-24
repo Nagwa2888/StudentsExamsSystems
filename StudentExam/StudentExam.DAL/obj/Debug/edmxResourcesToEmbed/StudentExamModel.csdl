@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StudentDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="StudentDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Exams" EntityType="StudentDBModel.Exam" />
+    <EntitySet Name="StudentDetails" EntityType="StudentDBModel.StudentDetail" />
+    <EntitySet Name="StudentMasters" EntityType="StudentDBModel.StudentMaster" />
+    <EntitySet Name="Subjects" EntityType="StudentDBModel.Subject" />
+    <AssociationSet Name="FK_StudentDetails_StudentMaster" Association="StudentDBModel.FK_StudentDetails_StudentMaster">
+      <End Role="StudentMaster" EntitySet="StudentMasters" />
+      <End Role="StudentDetail" EntitySet="StudentDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentMaster_Exams" Association="StudentDBModel.FK_StudentMaster_Exams">
+      <End Role="Exam" EntitySet="Exams" />
+      <End Role="StudentMaster" EntitySet="StudentMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentDetails_Subjects" Association="StudentDBModel.FK_StudentDetails_Subjects">
+      <End Role="Subject" EntitySet="Subjects" />
+      <End Role="StudentDetail" EntitySet="StudentDetails" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Exam">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="StudentMasters" Relationship="StudentDBModel.FK_StudentMaster_Exams" FromRole="Exam" ToRole="StudentMaster" />
+  </EntityType>
+  <EntityType Name="StudentDetail">
+    <Key>
+      <PropertyRef Name="StudentDetailId" />
+    </Key>
+    <Property Name="StudentDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StudentId" Type="Int32" />
+    <Property Name="SubjectId" Type="Int32" />
+    <Property Name="TotalMarks" Type="Int32" />
+    <Property Name="MarksObtained" Type="Int32" />
+    <Property Name="Percentage" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="StudentMaster" Relationship="StudentDBModel.FK_StudentDetails_StudentMaster" FromRole="StudentDetail" ToRole="StudentMaster" />
+    <NavigationProperty Name="Subject" Relationship="StudentDBModel.FK_StudentDetails_Subjects" FromRole="StudentDetail" ToRole="Subject" />
+  </EntityType>
+  <EntityType Name="StudentMaster">
+    <Key>
+      <PropertyRef Name="StudentId" />
+    </Key>
+    <Property Name="StudentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="ExamId" Type="Int32" />
+    <Property Name="ClassName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="RollNumber" Type="Int32" />
+    <NavigationProperty Name="StudentDetails" Relationship="StudentDBModel.FK_StudentDetails_StudentMaster" FromRole="StudentMaster" ToRole="StudentDetail" />
+    <NavigationProperty Name="Exam" Relationship="StudentDBModel.FK_StudentMaster_Exams" FromRole="StudentMaster" ToRole="Exam" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="StudentDetails" Relationship="StudentDBModel.FK_StudentDetails_Subjects" FromRole="Subject" ToRole="StudentDetail" />
+  </EntityType>
+  <Association Name="FK_StudentDetails_StudentMaster">
+    <End Type="StudentDBModel.StudentMaster" Role="StudentMaster" Multiplicity="0..1" />
+    <End Type="StudentDBModel.StudentDetail" Role="StudentDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StudentMaster">
+        <PropertyRef Name="StudentId" />
+      </Principal>
+      <Dependent Role="StudentDetail">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentMaster_Exams">
+    <End Type="StudentDBModel.Exam" Role="Exam" Multiplicity="0..1" />
+    <End Type="StudentDBModel.StudentMaster" Role="StudentMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Exam">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StudentMaster">
+        <PropertyRef Name="ExamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentDetails_Subjects">
+    <End Type="StudentDBModel.Subject" Role="Subject" Multiplicity="0..1" />
+    <End Type="StudentDBModel.StudentDetail" Role="StudentDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StudentDetail">
+        <PropertyRef Name="SubjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

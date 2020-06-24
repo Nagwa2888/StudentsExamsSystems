@@ -1,0 +1,292 @@
+﻿@model StudentExam.Portal.Models.ViewModel.StudentMasterViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h4>Student Marks</h4>
+
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModel" data-backdrop="static" data-keyboard="false"> New Student Marks</button>
+<div id="myModel" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"data-dismiss="modal"> &times;</button>
+                <h4 class="modal-title"> Student Result</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "txtStudentName" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.Class)
+                            @Html.TextBoxFor(model => model.Class, new { @class = "form-control", id = "txtClassName" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.RollNumber)
+                            @Html.TextBoxFor(model => model.RollNumber, new { @class = "form-control", id = "txtRollNumber" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.ExamId)
+                            @Html.DropDownListFor(model => model.ExamId, Model.ListOfExams, new { @class = "form-control", id = "ddExam" })
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Student Marks</legend>
+
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.SubjectId)
+                            @Html.DropDownListFor(model => model.SubjectId,Model.ListOfSubjects ,new { @class = "form-control", id = "ddSubject" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.TotalMarks)
+                            @Html.TextBoxFor(model => model.TotalMarks, new { @class = "form-control", id = "txtTotalMarks" ,style="text-align:right"})
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.MarksObtained)
+                            @Html.TextBoxFor(model => model.MarksObtained, new { @class = "form-control", id = "txtMarksObtained", style = "text-align:right" })
+                        </div>
+                        <div class="form-group">
+                            <input type="button" id="btnAddToList" name="addToList" value="Add To List" class="btn btn-success" />
+                        </div>
+                        <div class="col-lg-6">
+                            <table class="table table-condensed" style="width:100%;" id="tableStudentMarks">
+                                <thead>
+                                    <tr>
+                                        <th hidden>
+                                            Subject ID
+                                        </th>
+                                        <th>
+                                            Subject
+                                        </th>
+                                        <th>
+                                            Total Marks
+                                        </th>
+                                        <th>
+                                            Marks Obtained
+                                        </th>
+                                        <th>
+                                            Percentage
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave">Save</button>&nbsp;
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<fieldset>
+    <legend>Student Details </legend>
+    <table style="width:100%" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Student Name
+                </th>
+                <th>
+                    Exam
+                </th>
+                <th>
+                    Class Name
+                </th>
+                <th>
+                    Roll Number
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ListOfStudentModels)
+            {
+                <tr>
+                    <td>@item.StudentName</td>
+                    <td>@item.ExamName</td>
+                    <td>@item.ClassName</td>
+                    <td>@item.RollNumber</td>
+                    <td><input type="button" name="details" value="Dispaly Marks" class="btn btn-success" onclick='StudentMarks(@item.StduentId)'/></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</fieldset>
+
+
+<fieldset>
+    <legend>
+        Student Marks
+    </legend>
+    <div id="divStudentMarks">
+
+    </div>
+</fieldset>
+
+
+<script src="~/Scripts/jquery-3.5.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+    
+        $("#btnAddToList").click(function () {
+            AddMarksIntoTable();
+        });
+        $("#btnSave").click(function () {
+            AddStudentMarksIntoDataBase();
+          
+        });
+    });
+
+    function StudentMarks(studentId) {
+        $.ajax({
+            async: true,
+            type: 'GET',
+            dataType: 'HTML',
+            contentType: 'application/json; charset=utf-8',
+            url:'/Home/GetStudentMarks',
+            data: { studentId: studentId },
+            success: function (data) {
+                $('#divStudentMarks').html(data);
+            },
+            error: function () {
+                alert("There is Some Problem");
+            }
+
+        });
+    }
+
+    function removeMarks(rowValue) {
+        $(rowValue).closest('tr').remove();
+    } 
+
+    function ResetMarksDetailsAfterSaving()
+    {
+        $("#txtStudentName").val('');
+        $("#ddExam").val(1);
+        $("#txtRollNumber").val('');
+        $("#txtClassName").val('');
+        $("#tableStudentMarks").find("tr:gt(0)").remove();
+        ResetMarksList();
+        $("#txtStudentName").focus();
+    }
+
+    function ResetMarksList() {
+        $("#ddSubject").val(1);
+        $("#txtTotalMarks").val('');
+        $("#txtMarksObtained").val('');
+    }
+    function AddMarksIntoTable() {
+        if ($("#ddSubject option:selected").text() === "") {
+            alert("please select subject");
+            $("#ddSubject option:selected").focus();
+            return;
+        }
+
+        if ($("#txtTotalMarks").val() === "") {
+            alert("please Total Marks");
+            $("#txtTotalMarks").focus();
+            return;
+        }
+
+        if ($("#txtMarksObtained").val() === "") {
+            alert("please Marks Obtained");
+            $("#txtMarksObtained").focus();
+            return;
+        }
+
+        if (parseInt($("#txtTotalMarks").val()) < parseInt($("#txtMarksObtained").val())) {
+            alert("Marks Obtained always should be less or equal than Total Marks ");
+            $("#txtMarksObtained").focus();
+            return;
+        }
+
+        var subjectId = $("#ddSubject").val();
+        var TotalMarks = $("#tableStudentMarks").find("tr:gt(0)");
+        var isReturn = false;
+        $.each(TotalMarks, function () {
+            var listedSubjectId = $(this).find("td:eq(0)").text();
+            var listedSubject = $(this).find("td:eq(1)").text();
+            if (listedSubjectId === subjectId) {
+                alert('Subject :' + listedSubject + ' is already listed');
+                isReturn = true;
+                return ;
+            }
+
+            if (isReturn === true) {
+                return false;
+            }
+        });
+
+
+        var marksTable = $("#tableStudentMarks");
+        var subjectId = $("#ddSubject").val();
+        var subject = $("#ddSubject option:selected").text();
+        var totalMarks = $("#txtTotalMarks").val();
+        var marksObtained = $("#txtMarksObtained").val();
+        var percentage = (parseInt(marksObtained) / parseInt(totalMarks) )* 100;
+
+        var rowValue = "<tr><td>" +
+            subjectId+"</td><td>"+
+            subject + "</td><td>" +
+            totalMarks + "</td><td>" +
+            marksObtained + "</td><td>" +
+            percentage + "</td><td>" +
+            "<input type='button' name='remove' value='Remove' onclick='removeMarks(this)' class='btn btn-danger'/></td></tr>"
+        $("#tableStudentMarks").append(rowValue);
+        ResetMarksList();
+    }
+
+    function AddStudentMarksIntoDataBase()
+    {
+        var objStudentViewModel = {};
+        var listOfStudentMarks = [];
+        var TotalMarks = $("#tableStudentMarks").find("tr:gt(0)");
+
+        $.each(TotalMarks, function () {
+            var studentMarks = {};
+            studentMarks.SubjectId = $(this).find("td:eq(0)").text();
+            studentMarks.TotalMarks = $(this).find("td:eq(2)").text();
+            studentMarks.ObtainedMarks = $(this).find("td:eq(3)").text();
+            studentMarks.Percentage = $(this).find("td:eq(4)").text();
+            listOfStudentMarks.push(studentMarks);
+        });
+
+        objStudentViewModel.StudentName = $("#txtStudentName").val();
+        objStudentViewModel.ClassName = $("#txtClassName").val();
+        objStudentViewModel.ExamId = $("#ddExam").val();
+        objStudentViewModel.RollNumber = $("#txtRollNumber").val();
+        objStudentViewModel.ListOfStudentMarks = listOfStudentMarks;
+        $.ajax({
+            async: true,
+            type: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(objStudentViewModel),
+            url: '/Home/Index',
+            success: function (data) {
+                if (data.status === true) {
+                    alert(data.message);
+                    location.reload();
+                    ResetMarksDetailsAfterSaving();
+                }
+            },
+            error: function () {
+                alert("There is Some Problem to processing Your Request");
+            }
+        });
+    }
+</script>

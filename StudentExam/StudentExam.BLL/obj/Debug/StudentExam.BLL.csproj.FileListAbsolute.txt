@@ -1,0 +1,15 @@
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.BLL.dll.config
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.BLL.dll
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.BLL.pdb
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\EntityFramework.dll
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\EntityFramework.SqlServer.dll
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.Entity.dll
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.Entity.pdb
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\StudentExam.Entity.dll.config
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\EntityFramework.xml
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\bin\Debug\EntityFramework.SqlServer.xml
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\obj\Debug\StudentExam.BLL.csprojAssemblyReference.cache
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\obj\Debug\StudentExam.BLL.csproj.CoreCompileInputs.cache
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\obj\Debug\StudentExam.BLL.csproj.CopyComplete
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\obj\Debug\StudentExam.BLL.dll
+E:\iti2\CV Projects\StudentExam\StudentExam.BLL\obj\Debug\StudentExam.BLL.pdb
